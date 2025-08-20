@@ -1,46 +1,34 @@
-let recentEntries = [];
-const MAX_ENTRIES = 5;
+const database = firebase.database();
+const textsRef = database.ref('entries');
 
+// Hàm lưu dữ liệu
 function saveText() {
     const textInput = document.getElementById('textInput');
     const text = textInput.value.trim();
 
     if (text) {
-        // Thêm kết quả mới vào đầu mảng
-        recentEntries.unshift(text);
-
-        // Giới hạn mảng chỉ còn 5 phần tử
-        if (recentEntries.length > MAX_ENTRIES) {
-            recentEntries.pop();
-        }
-
-        // Lưu dữ liệu vào localStorage để duy trì sau khi tải lại trang
-        localStorage.setItem('recentEntries', JSON.stringify(recentEntries));
-
-        // Cập nhật giao diện
-        updateList();
-
-        // Xóa nội dung trong ô nhập
-        textInput.value = '';
+        // Sử dụng .push() để thêm một bản ghi mới với ID duy nhất
+        textsRef.push({
+            content: text
+        });
+        textInput.value = ''; // Xóa nội dung ô nhập
     }
 }
 
-function updateList() {
+// Lắng nghe thay đổi trên cơ sở dữ liệu
+// Sẽ tự động chạy khi trang web tải lần đầu và mỗi khi có dữ liệu mới được thêm vào
+textsRef.limitToLast(5).on('value', (snapshot) => {
     const textList = document.getElementById('textList');
     textList.innerHTML = ''; // Xóa danh sách cũ
 
-    recentEntries.forEach(entry => {
-        const li = document.createElement('li');
-        li.textContent = entry;
-        textList.appendChild(li);
-    });
-}
-
-// Tải dữ liệu từ localStorage khi trang được load
-document.addEventListener('DOMContentLoaded', () => {
-    const storedEntries = localStorage.getItem('recentEntries');
-    if (storedEntries) {
-        recentEntries = JSON.parse(storedEntries);
-        updateList();
+    const data = snapshot.val();
+    if (data) {
+        // Lặp qua dữ liệu nhận được và thêm vào danh sách
+        const entries = Object.values(data);
+        entries.forEach(entry => {
+            const li = document.createElement('li');
+            li.textContent = entry.content;
+            textList.appendChild(li);
+        });
     }
 });
