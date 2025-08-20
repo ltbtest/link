@@ -19,19 +19,25 @@
 
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
-    <script>
-      const firebaseConfig = {
-        // Dán đoạn mã cấu hình của bạn ở đây
-         apiKey: "AIzaSyAEkLwG7dJmRwnH2tEM6ZEpmhgCUHu93T0",
-         authDomain: "tblinks.firebaseapp.com",
-         projectId: "tblinks",
-         storageBucket: "tblinks.firebasestorage.app",
-         messagingSenderId: "91443382090",
-         appId: "1:91443382090:web:f24902cf73e44aa1e523b3"
-      };
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
 
-      firebase.initializeApp(firebaseConfig);
-    </script>
+  // Your web app's Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyAEkLwG7dJmRwnH2tEM6ZEpmhgCUHu93T0",
+    authDomain: "tblinks.firebaseapp.com",
+    projectId: "tblinks",
+    storageBucket: "tblinks.firebasestorage.app",
+    messagingSenderId: "91443382090",
+    appId: "1:91443382090:web:f24902cf73e44aa1e523b3"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+</script>
 
     <script src="script.js"></script>
 </body>
