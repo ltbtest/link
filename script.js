@@ -1,30 +1,38 @@
+// Khởi tạo các biến kết nối tới Firebase Realtime Database
 const database = firebase.database();
 const textsRef = database.ref('entries');
 
-// Hàm lưu dữ liệu
+// Hàm xử lý khi người dùng nhấn nút "Lưu"
 function saveText() {
     const textInput = document.getElementById('textInput');
     const text = textInput.value.trim();
 
     if (text) {
-        // Sử dụng .push() để thêm một bản ghi mới với ID duy nhất
+        // Gửi dữ liệu mới lên Firebase với một ID duy nhất
         textsRef.push({
-            content: text
+            content: text,
+            timestamp: Date.now() // Thêm dấu thời gian để đảm bảo thứ tự
         });
-        textInput.value = ''; // Xóa nội dung ô nhập
+        
+        // Xóa nội dung trong ô nhập sau khi gửi
+        textInput.value = '';
     }
 }
 
-// Lắng nghe thay đổi trên cơ sở dữ liệu
-// Sẽ tự động chạy khi trang web tải lần đầu và mỗi khi có dữ liệu mới được thêm vào
+// Lắng nghe các thay đổi từ Firebase theo thời gian thực
+// Lệnh .limitToLast(5) đảm bảo chỉ lấy 5 kết quả mới nhất
 textsRef.limitToLast(5).on('value', (snapshot) => {
     const textList = document.getElementById('textList');
-    textList.innerHTML = ''; // Xóa danh sách cũ
+    
+    // Xóa nội dung danh sách cũ trước khi cập nhật
+    textList.innerHTML = ''; 
 
     const data = snapshot.val();
     if (data) {
-        // Lặp qua dữ liệu nhận được và thêm vào danh sách
+        // Chuyển đổi dữ liệu từ object sang array để dễ dàng lặp qua
         const entries = Object.values(data);
+        
+        // Lặp qua từng bản ghi và thêm vào danh sách
         entries.forEach(entry => {
             const li = document.createElement('li');
             li.textContent = entry.content;
